@@ -4,7 +4,7 @@ platforms: dotnet
 author: jasonnewyork
 ---
 
-# Getting Started with Azure Table Service in .NET
+# Getting Started with Azure Table Storage in .NET
 
 Demonstrates how to perform common tasks using the Microsoft Azure Table storage
 including creating a table, CRUD operations, batch operations and different querying techniques.
