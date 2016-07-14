@@ -1,0 +1,11 @@
+*.suo
+TableStorage/bin/Debug/TableStorage.exe
+*.dll
+*.csproj
+*.xml
+TableStorage/obj/Debug/*.*
+TableStorage/bin/Debug/*.*
+TableStorage/StyleCop.cache
+*.nupkg
+packages/*
+*.ps1
