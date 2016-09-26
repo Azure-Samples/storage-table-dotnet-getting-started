@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
@@ -18,14 +19,19 @@ namespace TableStorage
             // Create or reference an existing table
             CloudTable table = await Common.CreateTableAsync(tableName);
 
-            // Demonstrate basic CRUD functionality 
-            await BasicDataOperationsAsync(table);
+            try
+            {
+                // Demonstrate basic CRUD functionality 
+                await BasicDataOperationsAsync(table);
 
-            // Create a SAS and try CRUD operations with the SAS.
-            await BasicDataOperationsWithSasAsync(table);
-
-            // Delete the table
-            await table.DeleteIfExistsAsync();
+                // Create a SAS and try CRUD operations with the SAS.
+                await BasicDataOperationsWithSasAsync(table);
+            }
+            finally
+            {
+                // Delete the table
+                await table.DeleteIfExistsAsync();
+            }
         }
 
         /// <summary>
@@ -42,19 +48,23 @@ namespace TableStorage
                 PhoneNumber = "425-555-0101"
             };
 
-            // Demonstrate how to Update the entity by changing the phone number
-            Console.WriteLine("2. Update an existing Entity using the InsertOrMerge Upsert Operation.");
-            customer.PhoneNumber = "425-555-0105";
+            // Demonstrate how to insert the entity
+            Console.WriteLine("Insert an Entity.");
             customer = await InsertOrMergeEntityAsync(table, customer);
+
+            // Demonstrate how to Update the entity by changing the phone number
+            Console.WriteLine("Update an existing Entity using the InsertOrMerge Upsert Operation.");
+            customer.PhoneNumber = "425-555-0105";
+            await InsertOrMergeEntityAsync(table, customer);
             Console.WriteLine();
 
             // Demonstrate how to Read the updated entity using a point query 
-            Console.WriteLine("3. Reading the updated Entity.");
+            Console.WriteLine("Reading the updated Entity.");
             customer = await RetrieveEntityUsingPointQueryAsync(table, "Harp", "Walter");
             Console.WriteLine();
 
             // Demonstrate how to Delete an entity
-            Console.WriteLine("4. Delete the entity. ");
+            Console.WriteLine("Delete the entity. ");
             await DeleteEntityAsync(table, customer);
             Console.WriteLine();
         }
@@ -66,7 +76,7 @@ namespace TableStorage
         /// <returns>A Task object</returns>
         private static async Task BasicDataOperationsWithSasAsync(CloudTable table)
         {
-            string sharedAccessPolicyName = "sample-policy-" + DateTime.Now.Ticks.ToString();
+            string sharedAccessPolicyName = "sample-policy";
 
             // Create a shared access policy on the table.
             // The access policy may be optionally used to provide constraints for
@@ -168,6 +178,9 @@ namespace TableStorage
                 // Add the new policy to the table's permissions, and update the table's permissions.
                 permissions.SharedAccessPolicies.Add(policyName, sharedPolicy);
                 await table.SetPermissionsAsync(permissions);
+
+                Console.WriteLine("Wait 30 seconds for pemissions to propagate");
+                Thread.Sleep(30);
             }
             catch (StorageException e)
             {
@@ -220,11 +233,12 @@ namespace TableStorage
 
             // Read operation: query an entity.
             // This operation requires read permissions on the SAS.
+            CustomerEntity customerRead = null;
             try
             {
                 TableOperation retrieveOperation = TableOperation.Retrieve<CustomerEntity>(customer.PartitionKey, customer.RowKey);
                 TableResult result = await table.ExecuteAsync(retrieveOperation);
-                CustomerEntity customerRead = result.Result as CustomerEntity;
+                customerRead = result.Result as CustomerEntity;
                 if (customerRead != null)
                 {
                     Console.WriteLine("\t{0}\t{1}\t{2}\t{3}", customerRead.PartitionKey, customerRead.RowKey, customerRead.Email, customerRead.PhoneNumber);
@@ -252,12 +266,9 @@ namespace TableStorage
             // Delete operation: delete an entity.
             try
             {
-                TableOperation retrieveOperation = TableOperation.Retrieve<CustomerEntity>(customer.PartitionKey, customer.RowKey);
-                TableResult result = await table.ExecuteAsync(retrieveOperation);
-                CustomerEntity customerDelete = result.Result as CustomerEntity;
-                if (customerDelete != null)
+                if (customerRead != null)
                 {
-                    await DeleteEntityAsync(table, customerDelete);
+                    await DeleteEntityAsync(table, customerRead);
                 }
 
                 Console.WriteLine("Delete operation succeeded for SAS {0}", sasUri);

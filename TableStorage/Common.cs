@@ -49,7 +49,7 @@ namespace TableStorage
             // Create a table client for interacting with the table service
             CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
 
-            Console.WriteLine("1. Create a Table for the demo");
+            Console.WriteLine("Create a Table for the demo");
 
             // Create a table client for interacting with the table service 
             CloudTable table = tableClient.GetTableReference(tableName);

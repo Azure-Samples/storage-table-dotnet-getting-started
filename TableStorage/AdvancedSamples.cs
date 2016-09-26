@@ -22,26 +22,31 @@ namespace TableStorage
             CloudTable table = await Common.CreateTableAsync(tableName);
             CloudTableClient tableClient = table.ServiceClient;
 
-            // Demonstrate advanced functionality such as batch operations and segmented multi-entity queries
-            await AdvancedDataOperationsAsync(table);
+            try
+            {
+                // Demonstrate advanced functionality such as batch operations and segmented multi-entity queries
+                await AdvancedDataOperationsAsync(table);
 
-            // List tables in the storage account
-            await TableListingOperations(tableClient);
+                // List tables in the storage account
+                await TableListingOperations(tableClient);
 
-            // Service Properties
-            await ServicePropertiesSample(tableClient);
+                // Service Properties
+                await ServicePropertiesSample(tableClient);
 
-            // CORS
-            await CorsSample(tableClient);
+                // CORS
+                await CorsSample(tableClient);
 
-            // Service Stats
-            await ServiceStatsSample(tableClient);
+                // Service Stats
+                await ServiceStatsSample(tableClient);
 
-            // Table Acl
-            await TableAclSample(table);
-
-            // Delete the table
-            await table.DeleteIfExistsAsync();
+                // Table Acl
+                await TableAclSample(table);
+            }
+            finally
+            {
+                // Delete the table
+                await table.DeleteIfExistsAsync();
+            }
         }
 
         /// <summary>
@@ -52,22 +57,22 @@ namespace TableStorage
         private static async Task AdvancedDataOperationsAsync(CloudTable table)
         {
             // Demonstrate upsert and batch table operations
-            Console.WriteLine("4. Inserting a batch of entities. ");
+            Console.WriteLine("Inserting a batch of entities. ");
             await BatchInsertOfCustomerEntitiesAsync(table);
             Console.WriteLine();
 
             // Query a range of data within a partition using a simple query
-            Console.WriteLine("5. Retrieving entities with surname of Smith and first names >= 1 and <= 75");
+            Console.WriteLine("Retrieving entities with surname of Smith and first names >= 1 and <= 75");
             ExecuteSimpleQuery(table, "Smith", "0001", "0075");
             Console.WriteLine();
 
             // Query the same range of data within a partition and return result segments of 50 entities at a time
-            Console.WriteLine("6. Retrieving entities with surname of Smith and first names >= 1 and <= 75");
+            Console.WriteLine("Retrieving entities with surname of Smith and first names >= 1 and <= 75");
             await PartitionRangeQueryAsync(table, "Smith", "0001", "0075");
             Console.WriteLine();
 
             // Query for all the data within a partition 
-            Console.WriteLine("7. Retrieve entities with surname of Smith.");
+            Console.WriteLine("Retrieve entities with surname of Smith.");
             await PartitionScanAsync(table, "Smith");
             Console.WriteLine();
         }
@@ -150,10 +155,9 @@ namespace TableStorage
             ServiceProperties originalProperties = await tableClient.GetServicePropertiesAsync();
             try
             {
-                // Set CORS rules
-                Console.WriteLine("Set CORS rules");
+                // Add CORS rule
+                Console.WriteLine("Add CORS rule");
 
-                CorsProperties cors = new CorsProperties();
                 CorsRule corsRule = new CorsRule
                 {
                     AllowedHeaders = new List<string> { "*" },
@@ -163,9 +167,8 @@ namespace TableStorage
                     MaxAgeInSeconds = 3600
                 };
 
-                cors.CorsRules.Add(corsRule);
                 ServiceProperties serviceProperties = await tableClient.GetServicePropertiesAsync();
-                serviceProperties.Cors = cors;
+                serviceProperties.Cors.CorsRules.Add(corsRule);
                 await tableClient.SetServicePropertiesAsync(serviceProperties);
             }
             finally
@@ -194,6 +197,10 @@ namespace TableStorage
                 ServiceStats stats = await tableClient.GetServiceStatsAsync();
                 Console.WriteLine("    Last sync time: {0}", stats.GeoReplication.LastSyncTime);
                 Console.WriteLine("    Status: {0}", stats.GeoReplication.Status);
+            }
+            catch (StorageException)
+            {
+                // only works on RA-GRS (Read Access – Geo Redundant Storage)
             }
             finally
             {
