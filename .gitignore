@@ -9,3 +9,5 @@ TableStorage/StyleCop.cache
 *.nupkg
 packages/*
 *.ps1
+.vs/
+.vscode/
