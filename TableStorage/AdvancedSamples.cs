@@ -31,11 +31,11 @@ namespace TableStorage
                 // List tables in the storage account
                 await TableListingOperations(tableClient);
 
-                // Create a SAS and try CRUD operations with the SAS.
-                await AdvancedDataOperationsWithSasAsync(table);
-
                 if (!SamplesUtils.IsAzureCosmosdbTable())
                 {
+                    // Create a SAS and try CRUD operations with the SAS.
+                    await AdvancedDataOperationsWithSasAsync(table);
+
                     // Service Properties
                     await ServicePropertiesSample(tableClient);
 
