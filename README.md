@@ -23,6 +23,9 @@ get a FREE trial account [here](http://go.microsoft.com/fwlink/?LinkId=330212)
 
 ### Azure Cosmos DB Table API
 
+__NOTE: This sample will not work against tables in table account created during the preview period. It will only work against
+tables created in table accounts created after GA on 11/15/2017.__
+
 1. Go to your Azure Cosmos DB Table API instance in the Azure Portal and select 
 "Connection String" in the menu, select the Read-write Keys tab and copy the value 
 in the "CONNECTION STRING" field.
