@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Microsoft.Azure.CosmosDB.Table;
+using System;
 using System.Threading.Tasks;
-using Microsoft.WindowsAzure.Storage.Table;
 using TableStorage.Model;
 
 namespace TableStorage

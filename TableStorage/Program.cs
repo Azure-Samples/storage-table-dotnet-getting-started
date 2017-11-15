@@ -17,30 +17,7 @@
 namespace TableStorage
 {
     using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using Microsoft.Azure;
-    using Microsoft.WindowsAzure.Storage;
-    using Microsoft.WindowsAzure.Storage.Table;
-    using Model;
 
-    /// <summary>
-    /// Azure Table Service Sample - Demonstrate how to perform common tasks using the Microsoft Azure Table storage 
-    /// including creating a table, CRUD operations, batch operations and different querying techniques. 
-    /// 
-    /// Note: This sample uses the .NET 4.5 asynchronous programming model to demonstrate how to call the Storage Service using the 
-    /// storage client libraries asynchronous API's. When used in real applications this approach enables you to improve the 
-    /// responsiveness of your application. Calls to the storage service are prefixed by the await keyword. 
-    /// 
-    /// Documentation References: 
-    /// - How to create, manage, or delete a storage account in the Azure Portal - https://azure.microsoft.com/documentation/articles/storage-create-storage-account/
-    /// - Getting Started with Tables - http://azure.microsoft.com/en-us/documentation/articles/storage-dotnet-how-to-use-tables/
-    /// - Table Service Concepts - http://msdn.microsoft.com/en-us/library/dd179463.aspx
-    /// - Table Service REST API - http://msdn.microsoft.com/en-us/library/dd179423.aspx
-    /// - Table Service C# API - http://go.microsoft.com/fwlink/?LinkID=398944
-    /// - Use the Azure Storage Emulator for Development and Testing - https://azure.microsoft.com/documentation/articles/storage-use-emulator/
-    /// - Asynchronous Programming with Async and Await  - http://msdn.microsoft.com/en-us/library/hh191443.aspx
-    /// </summary>
     public class Program
     {
         // *************************************************************************************************************************

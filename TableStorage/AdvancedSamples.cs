@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.RetryPolicies;
-using Microsoft.WindowsAzure.Storage.Shared.Protocol;
-using Microsoft.WindowsAzure.Storage.Table;
+using Microsoft.Azure.CosmosDB.Table;
+using Microsoft.Azure.Storage;
 using TableStorage.Model;
 using System.Threading;
+using Microsoft.Azure.Storage.Shared.Protocol;
+using Microsoft.Azure.Storage.RetryPolicies;
 
 namespace TableStorage
 {

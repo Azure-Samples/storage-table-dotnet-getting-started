@@ -13,9 +13,11 @@
 // organization, product, domain name, email address, logo, person,
 // places, or events is intended or should be inferred.
 //----------------------------------------------------------------------------------
+using Microsoft.Azure.CosmosDB.Table;
+
 namespace TableStorage.Model
 {
-    using Microsoft.WindowsAzure.Storage.Table;
+    
 
     /// <summary>
     /// Define a Customer entity for demonstrating the Table Service. For the purposes of the sample we use the 
